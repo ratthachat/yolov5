@@ -349,13 +349,13 @@ if __name__ == '__main__':
        'iou_t': 0.20,  # iou training threshold
        'anchor_t': 4.0,  # anchor-multiple threshold
        'fl_gamma': opt.focal,  # focal loss gamma (efficientDet default is gamma=1.5)
-       'hsv_h': 0.014,  # image HSV-Hue augmentation (fraction)
+       'hsv_h': 0.014*4,  # image HSV-Hue augmentation (fraction)
        'hsv_s': 0.68,  # image HSV-Saturation augmentation (fraction)
        'hsv_v': 0.36,  # image HSV-Value augmentation (fraction)
-       'degrees': 15.0,  # image rotation (+/- deg)
+       'degrees': 12.0,  # image rotation (+/- deg)
        'translate': 0.0,  # image translation (+/- fraction)
        'scale': 0.5,  # image scale (+/- gain)
-       'shear': 5.0}  # image shear (+/- deg)
+       'shear': 0.0}  # image shear (+/- deg)
     print(hyp)
 
     # Overwrite hyp with hyp*.txt (optional)
