@@ -259,7 +259,8 @@ def train(hyp,opt):
         fi = fitness(np.array(results).reshape(1, -1))  # fitness_i = weighted combination of [P, R, mAP, F1]
         if fi > best_fitness:
             best_fitness = fi
-
+            print('update best checkpoint')
+        
         # Save model
         save = (not opt.nosave) or (final_epoch and not opt.evolve)
         if save:
