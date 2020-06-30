@@ -70,17 +70,22 @@ class Model(nn.Module):
         torch_utils.model_info(self)
         print('')
 
+    # credit : https://www.kaggle.com/wasupandceacar/yolov5tta
+    # add 3 more ttas
     def forward(self, x, augment=False, profile=False):
         if augment:
             img_size = x.shape[-2:]  # height, width
             s = [0.83, 0.67]  # scales
             y = []
             for i, xi in enumerate((x,
-                                    torch_utils.scale_img(x.flip(3), s[0]),  # flip-lr and scale
-                                    torch_utils.scale_img(x, s[1]),  # scale
+                                    torch_utils.scale_img(x.flip(3), s[0]),  # flip-lr and scale 0
+                                    torch_utils.scale_img(x, s[1]),  # scale 1 only
                                     x.flip(3), # only flip-lr
-                                    torch_utils.scale_img(x.flip(2), s[0]),  # flip-ud and scale
-                                    x.flip(2),  # only flip-lr
+                                    torch_utils.scale_img(x.flip(2), s[0]),  # flip-ud and scale 0
+                                    x.flip(2),  # only flip-ud
+                                    torch_utils.scale_img(x, s[0]),  # scale 0 only
+                                    torch_utils.scale_img(x.flip(3), s[1]),  # flip-lr and scale 1
+                                    torch_utils.scale_img(x.flip(2), s[1]),  # flip-ud and scale 1
                                     )):
                 # cv2.imwrite('img%g.jpg' % i, 255 * xi[0].numpy().transpose((1, 2, 0))[:, :, ::-1])
                 y.append(self.forward_once(xi)[0])
@@ -96,6 +101,17 @@ class Model(nn.Module):
             y[4][..., 1] = img_size[0] - y[4][..., 1]  # flip ud
             #
             y[5][..., 1] = img_size[0] - y[5][..., 1]  # flip ud
+            
+            #
+            y[6][..., :4] /= s[0]  # scale
+            
+            #
+            y[7][..., :4] /= s[1]  # scale
+            y[7][..., 0] = img_size[1] - y[1][..., 0]  # flip lr
+            
+            #
+            y[8][..., :4] /= s[1]  # scale
+            y[8][..., 1] = img_size[0] - y[4][..., 1]  # flip ud
             return torch.cat(y, 1), None  # augmented inference, train
         else:
             return self.forward_once(x, profile)  # single-scale inference, train
