@@ -107,11 +107,11 @@ class Model(nn.Module):
             
             #
             y[7][..., :4] /= s[1]  # scale
-            y[7][..., 0] = img_size[1] - y[1][..., 0]  # flip lr
+            y[7][..., 0] = img_size[1] - y[7][..., 0]  # flip lr
             
             #
             y[8][..., :4] /= s[1]  # scale
-            y[8][..., 1] = img_size[0] - y[4][..., 1]  # flip ud
+            y[8][..., 1] = img_size[0] - y[8][..., 1]  # flip ud
             return torch.cat(y, 1), None  # augmented inference, train
         else:
             return self.forward_once(x, profile)  # single-scale inference, train
